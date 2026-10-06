@@ -147,7 +147,7 @@
                 1px solid rgba(255,255,255,0.06);
 
             background:
-                rgba(11, 6, 18, 0.78);
+                rgba(11, 6, 18, 0.88);
 
             backdrop-filter: blur(16px);
         }
@@ -240,6 +240,21 @@
             box-shadow:
                 0 10px 28px
                 rgba(157,78,221,0.28);
+        }
+
+        /* Menú hamburguesa móvil */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
         }
 
         /* =========================
@@ -1391,10 +1406,42 @@
 
             .nav {
                 min-height: 64px;
+                position: relative;
             }
 
+            .menu-toggle {
+                display: flex;
+            }
+
+            /* Ocultamos los enlaces y el CTA principal por defecto en móvil y los convertimos en menú desplegable */
             .nav-links {
                 display: none;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                width: 100%;
+                background: rgba(15, 7, 25, 0.98);
+                backdrop-filter: blur(16px);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+                gap: 16px;
+                border-bottom: 1px solid var(--border);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            }
+
+            .nav-links.is-open {
+                display: flex;
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                width: 100%;
+                padding: 4px 0;
+            }
+
+            .nav-cta {
+                display: none; /* Se puede reubicar dentro del menú móvil si se prefiere */
             }
 
             .hero {
@@ -1527,16 +1574,6 @@
     }
     </script>
 
-        <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S9P4JF60H2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    
-      gtag('config', 'G-S9P4JF60H2');
-    </script>
-
 </head>
 
 <body>
@@ -1545,9 +1582,10 @@
 
     <div class="container nav">
 
+        <!-- Enlace corregido para evitar el error 404 -->
         <a
             class="logo"
-            href="/"
+            href="./"
             aria-label="QuickPaste"
         >
             <img
@@ -1560,27 +1598,33 @@
             <span>Quickpaste</span>
         </a>
 
+        <!-- Botón del menú hamburguesa para móviles -->
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+            ☰
+        </button>
+
         <nav
             class="nav-links"
+            id="navLinks"
             aria-label="Navegación principal"
         >
-            <a href="#funciones">
+            <a href="#funciones" class="nav-link-item">
                 Funciones
             </a>
 
-            <a href="#variables">
+            <a href="#variables" class="nav-link-item">
                 Variables dinámicas
             </a>
 
-            <a href="#como-funciona">
+            <a href="#como-funciona" class="nav-link-item">
                 Cómo funciona
             </a>
 
-            <a href="#faq">
+            <a href="#faq" class="nav-link-item">
                 FAQ
             </a>
 
-            <a href="blog/">
+            <a href="blog/" class="nav-link-item">
                 Blog
             </a>
         </nav>
@@ -1684,12 +1728,6 @@
                     <span class="browser-address"></span>
 
                 </div>
-
-                <!--
-                RECOMENDACIÓN:
-                Sustituye este mockup por una captura REAL
-                de la extensión cuando la tengas.
-                -->
 
                 <div class="product-shot">
 
@@ -2461,7 +2499,7 @@
                 <details>
 
                     <summary>
-                        ¿QuickPaste es gratis?
+                        ¿QuickPaste is gratis?
                     </summary>
 
                     <p>
@@ -2770,6 +2808,27 @@
 
 </script>
 
+<!-- Script para el control del menú móvil (hamburguesa) -->
+<script>
+    (() => {
+        const toggleBtn = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+        const links = document.querySelectorAll(".nav-link-item");
+
+        toggleBtn.addEventListener("click", () => {
+            navLinks.classList.toggle("is-open");
+            toggleBtn.textContent = navLinks.classList.contains("is-open") ? "✕" : "☰";
+        });
+
+        // Cierra el menú automáticamente al hacer clic en cualquier enlace de sección
+        links.forEach(link => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("is-open");
+                toggleBtn.textContent = "☰";
+            });
+        });
+    })();
+</script>
 
 </body>
 </html>
