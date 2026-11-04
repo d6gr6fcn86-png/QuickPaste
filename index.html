@@ -31,16 +31,6 @@
     <meta property="og:description" content="Crea plantillas con variables dinámicas, rellena los campos con Tab y escribe mensajes personalizados en segundos.">
     <meta property="og:image" content="og-quickpaste.png">
 
-    <!--
-    IMPORTANTE:
-    Cuando tengas dominio propio, añade:
-
-    <link rel="canonical" href="https://TU-DOMINIO.com/">
-
-    Y sustituye:
-    https://TU-DOMINIO.com/og-quickpaste.png
-    -->
-
     <style>
 
         :root {
@@ -253,7 +243,6 @@
                 rgba(157,78,221,0.28);
         }
 
-        /* Menú hamburguesa móvil */
         .menu-toggle {
             display: none;
             background: transparent;
@@ -1385,6 +1374,80 @@
         }
 
         /* =========================
+           COOKIES BANNER
+        ========================= */
+        .cookie-banner {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--card-solid);
+            border: 1px solid var(--border-hover);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cookie-banner.is-visible {
+            display: flex;
+        }
+
+        .cookie-banner p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .cookie-banner a {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
+        .cookie-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .cookie-btn-accept {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .cookie-btn-accept:hover {
+            background: #aa5ae7;
+        }
+
+        .cookie-btn-reject {
+            background: rgba(255,255,255,0.05);
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .cookie-btn-reject:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        /* =========================
            RESPONSIVE
         ========================= */
 
@@ -1424,7 +1487,6 @@
                 display: flex;
             }
 
-            /* Ocultamos los enlaces y el CTA principal por defecto en móvil y los convertimos en menú desplegable */
             .nav-links {
                 display: none;
                 position: absolute;
@@ -1452,7 +1514,7 @@
             }
 
             .nav-cta {
-                display: none; /* Se puede reubicar dentro del menú móvil si se prefiere */
+                display: none;
             }
 
             .hero {
@@ -1593,7 +1655,6 @@
 
     <div class="container nav">
 
-        <!-- Enlace corregido para evitar el error 404 -->
         <a
             class="logo"
             href="./"
@@ -1606,10 +1667,9 @@
                 alt="QuickPaste"
             >
 
-            <span>Quickpaste</span>
+            <span>QuickPaste</span>
         </a>
 
-        <!-- Botón del menú hamburguesa para móviles -->
         <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
             ☰
         </button>
@@ -2510,7 +2570,7 @@
                 <details>
 
                     <summary>
-                        ¿QuickPaste is gratis?
+                        ¿QuickPaste es gratis?
                     </summary>
 
                     <p>
@@ -2718,6 +2778,18 @@
 
 
 <!-- =========================
+     COOKIE BANNER
+========================= -->
+<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Aviso de cookies">
+    <p>Utilizamos cookies propias y de terceros (Google Analytics) para analizar el tráfico y mejorar tu experiencia. Puedes aceptar todas las cookies o configurar su uso. Consulta nuestra <a href="https://d6gr6fcn86-png.github.io/quickpaste-legal/" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>.</p>
+    <div class="cookie-actions">
+        <button class="cookie-btn-reject" id="cookieReject">Rechazar</button>
+        <button class="cookie-btn-accept" id="cookieAccept">Aceptar cookies</button>
+    </div>
+</div>
+
+
+<!-- =========================
      JAVASCRIPT
 ========================= -->
 
@@ -2831,12 +2903,38 @@
             toggleBtn.textContent = navLinks.classList.contains("is-open") ? "✕" : "☰";
         });
 
-        // Cierra el menú automáticamente al hacer clic en cualquier enlace de sección
         links.forEach(link => {
             link.addEventListener("click", () => {
                 navLinks.classList.remove("is-open");
                 toggleBtn.textContent = "☰";
             });
+        });
+    })();
+</script>
+
+<!-- Script para la gestión del banner de cookies -->
+<script>
+    (() => {
+        const cookieBanner = document.getElementById("cookieBanner");
+        const acceptBtn = document.getElementById("cookieAccept");
+        const rejectBtn = document.getElementById("cookieReject");
+
+        const cookieConsent = localStorage.getItem("quickpaste_cookie_consent");
+
+        if (!cookieConsent) {
+            setTimeout(() => {
+                cookieBanner.classList.add("is-visible");
+            }, 1000);
+        }
+
+        acceptBtn.addEventListener("click", () => {
+            localStorage.setItem("quickpaste_cookie_consent", "accepted");
+            cookieBanner.classList.remove("is-visible");
+        });
+
+        rejectBtn.addEventListener("click", () => {
+            localStorage.setItem("quickpaste_cookie_consent", "rejected");
+            cookieBanner.classList.remove("is-visible");
         });
     })();
 </script>
